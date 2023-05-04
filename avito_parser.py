@@ -19,7 +19,6 @@ class AvitoParse:
         self.data = []
 
 
-
     def __set_up(self):
         self.driver = uc.Chrome(version_main=self.version_main)
 
@@ -29,9 +28,9 @@ class AvitoParse:
 
 
     def __paginator(self):
-        while self.driver.find_elements(By.CSS_SELECTOR, "[data-marker='pagination-button/next']") and self.count > 0:
+        while self.driver.find_elements(By.CSS_SELECTOR, "[data-marker='pagination-button']") and self.count > 0:
             self.__parse_page()
-            self.driver.find_element(By.CSS_SELECTOR, "[data-marker='pagination-button/next']").click()
+            self.driver.find_element(By.CSS_SELECTOR, "[data-marker='pagination-button']").click()
             self.count -= 1
 
 
@@ -39,7 +38,7 @@ class AvitoParse:
         titles = self.driver.find_elements(By.CSS_SELECTOR, "[data-marker='item']")
         for title in titles:
             name = title.find_element(By.CSS_SELECTOR, "[itemprop='name']").text
-            description = title.find_element(By.CSS_SELECTOR, "[class*='description']").text
+            description = title.find_element(By.CSS_SELECTOR, "[class*='item-description']").text
             url = title.find_element(By.CSS_SELECTOR, "[data-marker='item-title']").get_attribute("href")
             price = title.find_element(By.CSS_SELECTOR, "[itemprop='price']").get_attribute("content")
             data = {
@@ -48,8 +47,10 @@ class AvitoParse:
                 'url': url,
                 'price': price
             }
-            self.data.append(data)
-            #print(name, description, url, price)
+            if any([item.lower() in description.lower() for item in self.items]): # and int(price) == 0:
+                self.data.append(data)
+                print(data)
+            # print(name, description, url, price)
         self.__save_data()
 
 
@@ -65,11 +66,10 @@ class AvitoParse:
 
 
 if __name__ == '__main__':
-    AvitoParse(url='https://www.avito.ru/sankt-peterburg/bytovaya_elektronika?cd=1&p=100&q=%D0%B1%D0%B5%D1%81%D0%BF%D0%BB%D0%B0%D1%82%D0%BD%D0%BE',
-               items=["iphone",],
-               count=1,
+    url = 'https://www.avito.ru/sankt-peterburg?q=%D0%B1%D0%B5%D1%81%D0%BF%D0%BB%D0%B0%D1%82%D0%BD%D0%BE'
+    url2 = 'https://www.avito.ru/sankt-peterburg/bytovaya_elektronika?cd=1&p=100&q=%D0%B1%D0%B5%D1%81%D0%BF%D0%BB%D0%B0%D1%82%D0%BD%D0%BE'
+    AvitoParse(url=url,
+               items=["iphone", "телевизор", "чехол", "пульт", "диван", "холодильник"],
+               count=10,
                version_main=112
                ).parse()
-
-
-
