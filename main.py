@@ -47,12 +47,12 @@ r = requests.get(url, headers=headers, stream=True)
 #        fd.write(chunk)
 #        print('Write chunk 100kb')
 
-r = requests.get('https://milkboys.org/', headers=headers)
+r = requests.get('https://', headers=headers)
 #print(r.status_code)
 #print(r.headers)
 #print(r.content)
 
-url_2 = 'https://i0.wp.com/milkboys.net/wp-content/uploads/lifeweaver.jpg'
+url_2 = 'https://wp-content/uploads/lifeweaver.jpg'
 r = requests.get(url_2, headers=headers, stream=True)
 # with open('1.jpg', 'wb') as fd: # парсинг картинки
 #    for chunk in r.iter_content(chunk_size=1024 * 10):
